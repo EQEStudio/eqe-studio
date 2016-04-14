@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+
+
+<title>易音大典</title>
+
+
+<style type="text/css">
+
+@keyframes turning{
+	from{transform:rotate(0deg);width:50px;height:50px;}
+	to{transform:rotate(360deg);width:150px;height:150px;}
+}
+@-moz-keyframes turning{
+	from{-moz-transform:rotate(0deg);width:50px;height:50px;}
+	to{-moz-transform:rotate(360deg);width:150px;height:150px;}
+}
+@-webkit-keyframes turning{
+	from{-webkit-transform:rotate(0deg);width:50px;height:50px;}
+	to{-webkit-transform:rotate(360deg);width:150px;height:150px;}
+}
+@-o-keyframes turning{
+	from{-o-transform:rotate(0deg);width:50px;height:50px;}
+	to{-o-transform:rotate(360deg);width:150px;height:150px;}
+}
+
+body{
+	background-color:#EEEEEE;
+	color:#fff;
+	text-align:center;
+	font-size:14px;
+	font-family:"宋体";
+	margin:0px;
+	text-align:center;
+	overflow:hidden;
+}
+
+#result{
+	background-color:#FF3030;
+	padding-top:60px;
+	padding-bottom:40px;
+	font-size:25px;
+	font-family:Arial;
+	word-break:break-all;
+	color:#fff;
+	overflow:auto;
+	text-align:center;
+
+}
+
+.transliterationWord{
+	font-size:30px;
+}
+
+#logo{
+	width:150px;
+	height:150px;
+	
+	animation:turning 2s;
+	-moz-animation:turning 2s;
+	-webkit-animation:turning 2s;
+	-o-animation:turning 2s;
+	
+	box-shadow:0px 0px 50px #FFFFFF;
+	-moz-box-shadow:0px 0px 50px #FFFFFF;
+	-webkit-box-shadow:0px 0px 50px #FFFFFF;
+	-o-box-shadow:0px 0px 50px #FFFFFF; 
+}
+
+.logo{
+	height:50px;
+	border-radius:25px;	
+}
+
+.bigword{
+	border-radius:10px;
+	padding:10px;
+	font-size:40px;
+	
+	box-shadow:0px 0px 50px #FFFFFF;
+	-moz-box-shadow:0px 0px 50px #FFFFFF;
+	-webkit-box-shadow:0px 0px 50px #FFFFFF;
+	-o-box-shadow:0px 0px 50px #FFFFFF; 
+	
+	
+}
+
+#chinese{
+	padding-top:5px;
+	padding-bottom:5px;
+	margin-bottom:10px;
+	overflow:auto;
+	font-size:12px;
+	color:#000;
+	text-align:center;
+	
+	box-shadow:0px -10px 100px #FFFFFF;
+	-moz-box-shadow:0px -10px 100px #FFFFFF;
+	-webkit-box-shadow:0px -10px 100px #FFFFFF;
+	-o-box-shadow:0px -10px 100px #FFFFFF; 
+}
+
+table{
+	margin-left:auto;
+	margin-right:auto;
+}
+
+select{
+	font-size:12px;
+	color:#000000;
+	background-color:#AAAAAA;
+	border-radius:3px;	
+}
+
+#meaning{
+	padding:50px;
+	overflow:auto;
+	font-size:14px;
+	color:#666666;
+	//background-color:#EFEFEF;
+	
+	/*
+	box-shadow:0px 10px 20px #FFFFFF;
+	-moz-box-shadow:0px 10px 20px #FFFFFF;
+	-webkit-box-shadow:0px 10px 20px #FFFFFF;
+	-o-box-shadow:0px 10px 20px #FFFFFF; 
+	*/
+	
+}
+
+.wordInput{
+	position:absolute;
+	bottom:0px;
+	width:100%;
+	background-color:#CCCCCC;
+	padding:0px;
+	padding-bottom:20px;
+	margin:0px;
+}
+
+#englishword{
+	width:80%;
+	margin:0px;
+	font-size:12px;
+	padding-top:6px;
+	padding-bottom:6px;
+	border-radius:6px;
+}
+
+#control{
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+button{
+	color:#FFFFFF;
+	border-radius:15px;
+	width:20%;
+	height:40px;
+	font-size:12px;
+	background-color:#999999;
+	
+	box-shadow:0px 10px 10px #666666;
+	-moz-box-shadow:0px 10px 10px #666666;
+	-webkit-box-shadow:0px 10px 10px #666666;
+	-o-box-shadow:0px 10px 10px #666666;
+	
+}
+
+#helpinfo{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	background-color:#00B2EE;
+	padding:-50px;
+	display:none;
+}
+
+.groupButton{
+	width:150px;
+	height:75px;
+	background-color:#EEEEEE;
+	color:#FF0000;
+	border-radius:15px;
+	padding:20px;
+}
+
+</style>
+
+<script type="text/javascript" src="phonetics.js"></script>
+<script type="text/javascript" src="E2Cdictionary.js"></script>
+
+
+<script type="text/javascript">
+
+//元音：iː	ɪ	e	æ	ɑː	ɒ	ɔː	ʊ	uː	ʌ	ɜː	ə	eɪ	əʊ	aɪ	ɔɪ	aʊ	ɪə	eə	ʊə//
+//辅音：p b t d k ɡ tʃ dʒ f v θ ð s z ʃ ʒ h m n ŋ l r j w"//
+
+//先要加载phoetics.js文件后才能正常运行程序
+
+//存储所输入的单词
+var currentEnglishWord="";
+
+//简化获取元素的程序
+function $(id){
+	var obj=document.getElementById(id);
+	return obj;
+}
+
+//注意HTML必须以UTF-8格式保存，而且必须在<head>声明<meta charset="UTF-8">
+//这样才能直接进行音标特殊字符的匹配
+//匹配采用逆向比较方便
+
+function inputKey(key){
+//虚拟键盘方便音标符号输入
+	$("englishword").value=$("englishword").value+key;
+}
+
+function transliterate(){
+	//接受输入框的输入值,注意要去除首尾空格
+	var englishWord=$("englishword").value.replace(/(^\s*)|(\s*$)/g,"");
+	var englishWordLowerCase=englishWord.toLowerCase();
+	
+	currentEnglishWord=englishWord;
+	
+	//获取输入单词后清空输入框方便下次输入
+	//$("englishword").value="";
+	
+	//注意单词音标的JSON格式phonetics.$word:"phoneticSymbols"
+	var phoneticSymbols=eval("phonetics.$"+englishWordLowerCase);
+	
+	//如果查不到则要提示和处理一下
+	if(phoneticSymbols!=undefined){
+		phoneticSymbols=phoneticSymbols;
+		//音节拆分
+		var syllableResult=divideSyllables(phoneticSymbols);
+		//音节转换为拼音
+		var pinyinResult=ep2cp(syllableResult);
+		//从备选汉字中采用首个汉字组成译音参考字串
+		//var chineseTransliteration=c2cs(p2c(pinyinResult));
+		//拼音转换为备选汉字
+		//var chineseResult=p2c(pinyinResult).join("<hr/>");
+		
+		//备选汉字组
+		var chineseResultArrary=p2c(pinyinResult);
+		
+		var transliterationWords="";
+		
+		var wordListTableHtml="";
+		wordListTableHtml+="<table>";
+		
+		wordListTableHtml+="<tr>";
+		
+		for(var i=0;i<chineseResultArrary.length;i++){
+		
+			transliterationWords+="<span class='transliterationWord' id='transliterationWord"+i+"'>"+chineseResultArrary[i].charAt(0)+"</span>";
+			
+			wordListTableHtml+="<td>";
+			wordListTableHtml+="<select onChange='changeTransliterationWord("+i+","+"this.options[this.options.selectedIndex].value"+");'>";
+			var wordListLength=chineseResultArrary[i].length;
+			for(var j=0;j<wordListLength;j++){
+				wordListTableHtml+="<option value='";
+				wordListTableHtml+=chineseResultArrary[i].charAt(j);
+				wordListTableHtml+="'>";
+				wordListTableHtml+=chineseResultArrary[i].charAt(j);
+				wordListTableHtml+="</option>";
+			}
+			wordListTableHtml+="</select>";
+			wordListTableHtml+="</td>";
+		}
+		
+		wordListTableHtml+="</tr>";
+		wordListTableHtml+="</table>";
+		
+		
+		var resultHTML="<span class='bigword'>"+englishWord+"</span><br /><br />"+syllableResult.join(" ")+"<br/>"+transliterationWords;
+		$("result").innerHTML=resultHTML;
+		$("chinese").innerHTML=wordListTableHtml;
+		$("meaning").innerHTML=findWordMeaning(englishWordLowerCase);
+		
+	}else{
+		
+		var resultHTML="<span class='bigword'>"+englishWord+"</span>";
+		$("result").innerHTML=resultHTML;
+		$("chinese").innerHTML="";
+		$("meaning").innerHTML=findWordMeaning(englishWordLowerCase);
+		
+	}
+
+
+}
+
+//改变译音汉字选项
+function changeTransliterationWord(i,value){
+	$("transliterationWord"+i).innerHTML=value;
+}
+
+//拆分音节程序
+function divideSyllables(inputSyllables){
+	var resultArray=new Array();
+	var sMax=5;
+	//在原输入字串前添加sMax=5个空格，方便后面操作
+	var inputStr="     "+inputSyllables;
+	var sLEN=inputStr.length;
+	
+	var rightIndex=sLEN-1;
+	var leftIndex=sMax;
+
+	for(var i=rightIndex;i>=leftIndex;i--){
+		
+		for(var j=5;j>=1;j--){
+			
+			var starPos=i-j+1;
+			var slice=inputStr.substr(starPos,j);
+
+			if(existSyllable(slice)){
+				resultArray.push(slice);
+				i=i-j+1;
+				break;
+			}
+
+		}
+		
+	}
+
+	return resultArray.reverse();
+}
+
+
+//判断音节是否存在
+function existSyllable(phonemes){
+	var found=typeof(e2p[phonemes])!="undefined";
+	return found;
+}
+
+//英语音标转换为汉语拼音
+function ep2cp(epArray){
+	var pinyinArray=new Array();
+	var aLen=epArray.length;
+	
+	for(var i=0;i<aLen;i++){
+		pinyinArray[i]=e2p[epArray[i]];
+	}
+
+	var pinyinString=pinyinArray.join(" ");
+	var resultPinyinArray=pinyinString.split(" ");
+	
+	return resultPinyinArray;
+}
+
+//汉语拼音转换为汉字
+function p2c(cpArray){
+	var ccArray=new Array();
+	var pLen=cpArray.length;
+	
+	for(var i=0;i<pLen;i++){
+		ccArray[i]=chinese[cpArray[i]];
+	}
+	
+	return ccArray;
+	
+}
+ 
+//备选汉字数组转换为参考译音字串
+function c2cs(cArray){
+	var arrLen=cArray.length;
+	var csArray=new Array();
+	for(var i=0;i<arrLen;i++){
+		csArray[i]=cArray[i].substr(0,1);
+	}
+	return csArray;
+}
+
+//清除输入框
+function clearvalue(){
+	$("englishword").value="";
+	$("result").innerHTML="";
+	$("chinese").innerHTML="";
+	$("meaning").innerHTML="";
+}
+
+//查词典
+function findWordMeaning(word){
+	return wordMeaning["$"+word];	
+}
+
+
+//帮助
+function help(){
+	clearvalue();
+	$("helpinfo").style.display="block";
+	
+}
+
+//朗读
+function speak(textToSpeak) {
+    // 创建一个SpeechSynthesisUtterance实例
+    var newUtterance = new SpeechSynthesisUtterance();
+    // 设置要发音的内容
+    newUtterance.text = textToSpeak;
+    // 添加在发音队列中
+    window.speechSynthesis.speak(newUtterance);
+}
+
+speak("Welcome!");
+
+/*
+function speaking(){
+	var englishWord=$("englishword").value.replace(/(^\s*)|(\s*$)/g,"");
+	if(englishWord!=currentEnglishWord){
+		transliterate();
+		speak(currentEnglishWord);	
+	}else{
+		speak(englishWord);		
+	}
+}
+*/
+
+function speaking(){
+	var englishWord=$("englishword").value.replace(/(^\s*)|(\s*$)/g,"");
+	if(englishWord!=currentEnglishWord){
+		transliterate();
+		Core.speak(currentEnglishWord);
+	}else{
+		Core.speak(englishWord);
+	}
+
+}
+
+
+
+
+//android加群接口
+function joinQQ(){
+        Core.joinGroup();
+}
+
+
+</script>
+
+</head>
+
+<body>
+
+	<div id="result">
+
+		<svg id="logo" width="150" height="150" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg">
+			<rect width="150" height="150" style="fill:rgb(255,0,0);stroke-width:0;stroke:rgb(255,0,0)"/>
+			<path d="M20 20 L110 20 L110 30 L30 30 L30 60 L110 60 L110 70 L30 70 L30 100 L110 100 L110 110 L20 110 Z" style="fill:white;stroke:red;stroke-width:0" />
+			<path d="M40 40 L130 40 L130 130 L40 130 L40 120 L120 120 L120 90 L40 90 L40 80 L120 80 L120 50 L40 50 Z" style="fill:white;stroke:red;stroke-width:0" />
+		</svg>
+		
+	</div>
+
+	
+	
+	<div id="meaning"></div>
+	
+	
+
+	<div class="wordInput">
+	
+		<div id="chinese"></div>
+		
+		
+		<input id="englishword" onkeypress="if(event.keyCode==13){transliterate()}" value="" />
+		
+		<br/><br/>
+		
+		<button onclick="help();">帮助</button>
+		<button onclick="clearvalue();">清空</button>
+		<button onclick="speaking();">朗读</button>
+		<button onclick="transliterate();">译音</button>
+	</div>
+
+
+	<div id="helpinfo" onclick="javascript:this.style.display='none'">
+		<br />
+		<br />
+		<h1>易音大典</h1>
+		
+
+		易音大典是英汉译音记忆词典<br />
+		所收录单词译音超过6万条<br />
+		单词释义超过10万条<br />
+		英语音节将被音译为同音或近音汉字<br />
+		每个音节可有多个对应译音汉字供您选择<br />
+		是编创易音诗关联记忆英语词汇的给力工具<br />
+		<br />		
+		世界语言 原本一气 音为虹桥 连通中西<br />
+		<br />
+		欲知更多详情请访问<br />
+		<br />		
+		易千忆学堂<br />
+		<br />
+		QQ群号<br />
+		211075080<br />
+		<br />		
+		请您点击按钮进入加群页面<br/>
+		<br/>
+
+        <!--
+		<a href="http://shang.qq.com/wpa/qunwpa?idkey=fcf3406a5acb6f55fbe0d7712001b13121b403dd7cde12f087a1dd9eb9ec8057"><button class="groupButton">亿忆亦一易<br />一易亦亿忆</button></a>
+		-->
+
+		<a href="javascript:joinQQ()"><button class="groupButton">亿忆亦一易<br />一易亦亿忆</button></a>
+
+		
+	</div>
+
+
+</body>
+
+
+</html>
